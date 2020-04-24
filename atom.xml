@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Place-Serenity.github.io</id>
     <title>my blog</title>
-    <updated>2020-04-24T13:37:24.229Z</updated>
+    <updated>2020-04-24T13:59:48.425Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Place-Serenity.github.io"/>
     <link rel="self" href="https://Place-Serenity.github.io/atom.xml"/>
@@ -14,17 +14,22 @@
         <id>https://Place-Serenity.github.io/hello-gridea/</id>
         <link href="https://Place-Serenity.github.io/hello-gridea/">
         </link>
-        <updated>2018-12-11T16:00:00.000Z</updated>
+        <updated>2020-04-24T13:00:00.000Z</updated>
         <content type="html"><![CDATA[<p>👏  欢迎</p>
-<pre><code>   最近发生了很多事情，比较乱，所以给自己的博客取了这个名字，未来这个博客会陪自己很长一段时间吧，写一写关于学习网安的总结，或者是c语言，偶尔写写影评亦或是读后感。
-   
-   关于这个博客，目前只是一个空壳，未来很长很长一段一段时间内，会不断地美化界面，或是填充一些新功能。也希望自己的学习网安的经验可以帮到未来的某个人，让他少走些许的弯路，亦如自己的现在，遇到问题在各个大佬的博客都可以找到相应的解决方案。
-   在这个宁静之地做些让自己可以变的很厉害的事，做些自己喜欢的事，多棒！！！
-   欢迎大家访问和分享一些心得体会，同时也欢迎各位大佬指点。
-
-   最后留下自己的个人邮箱:eternity.666serendipity@gmail
-</code></pre>
 <p>😘 Enjoy~</p>
+<p>Place of Serenity，意为宁静之地。</p>
+<p>最近也发生了很多事，很乱了算是，所以给自己的博客取了这个名字。<br>
+未来这个博客会陪伴自己很久吧。<br>
+假期呢，就每天写一写学习网安的心得，登岛开学了呢，就写一写RM搞机日常。<br>
+偶尔呢，写一写影评，亦或是某些书籍的读后感。</p>
+<p>emmmm<br>
+关于这个博客，目前只是一个空壳，未来会不断完善吧。</p>
+<p>自己呢，<br>
+就在这个宁静之地做一些可以让自己变的厉害的事，<br>
+做一些自己喜欢的事。<br>
+嘿嘿😜超级棒！！！</p>
+<p>🙃欢迎大家的访问和交流🙃</p>
+<p>最后留下自己的个人邮箱：eternity.666serendipity@gmail</p>
 ]]></content>
     </entry>
 </feed>
