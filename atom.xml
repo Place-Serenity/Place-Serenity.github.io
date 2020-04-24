@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Place-Serenity.github.io</id>
-    <title>666666</title>
-    <updated>2020-04-24T12:36:59.173Z</updated>
+    <title>my blog</title>
+    <updated>2020-04-24T13:28:05.229Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Place-Serenity.github.io"/>
     <link rel="self" href="https://Place-Serenity.github.io/atom.xml"/>
-    <subtitle>666666</subtitle>
     <logo>https://Place-Serenity.github.io/images/avatar.png</logo>
     <icon>https://Place-Serenity.github.io/favicon.ico</icon>
-    <rights>All rights reserved 2020, 666666</rights>
+    <rights>All rights reserved 2020, my blog</rights>
     <entry>
         <title type="html"><![CDATA[Welcome to Place of Serenity]]></title>
         <id>https://Place-Serenity.github.io/hello-gridea/</id>
