@@ -2,13 +2,282 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Place-Serenity.github.io</id>
     <title>my blog</title>
-    <updated>2020-04-24T14:02:22.488Z</updated>
+    <updated>2020-04-26T12:36:59.043Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Place-Serenity.github.io"/>
     <link rel="self" href="https://Place-Serenity.github.io/atom.xml"/>
     <logo>https://Place-Serenity.github.io/images/avatar.png</logo>
     <icon>https://Place-Serenity.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, my blog</rights>
+    <entry>
+        <title type="html"><![CDATA[4.26 c作业]]></title>
+        <id>https://Place-Serenity.github.io/426-c-zuo-ye/</id>
+        <link href="https://Place-Serenity.github.io/426-c-zuo-ye/">
+        </link>
+        <updated>2020-04-26T05:37:26.000Z</updated>
+        <content type="html"><![CDATA[<p>统计字符个数<!-- more --></p>
+<p>emm，思路很简单，利用它给的提示，一步一步来做就好啦</p>
+<pre><code>#include &lt;stdio.h&gt;
+
+int main()
+{ 
+char string_name[100] = {0};
+string_name[100]=gets(string_name);
+int i = 0;
+int letter = 0;
+int space = 0;
+int number = 0;
+int other = 0;
+
+for(i = 0;string_name[i] != '\0';i ++)
+{
+
+	if ((string_name[i] &gt;= 'a' &amp;&amp; string_name[i] &lt;= 'z')||(string_name[i] &gt;= 'A' &amp;&amp; string_name[i] &lt;= 'Z'))
+	{
+		letter ++;
+	}
+	else if (' ' == string_name[i])
+	{
+		space ++;
+	}
+	else if (string_name[i] &gt;= '0' &amp;&amp; string_name[i] &lt;= '9')
+	{
+		number ++;
+	}
+	else
+	{
+		other  ++;
+	}
+
+}
+printf (&quot;letter: %d\n&quot;,letter);
+printf (&quot;space: %d\n&quot;,space);
+printf (&quot;number: %d\n&quot;,number);
+printf (&quot;other: %d\n&quot;,other); 
+/*这里很狗，阿尔法平台它不让连续输出
+这里原先我是一个printf语句来输出的
+but但是就是一直报错（没有终止符，emmm感觉还是学太浅了）
+把一个printf（）换成四个分别输出就好了*/
+return 0;
+}
+</code></pre>
+<p>缩写词<!-- more --><br>
+这个c程序有问题，但是可以过检测，就很懵逼</p>
+<pre><code>#include &lt;stdio.h&gt;
+#include&lt;string.h&gt;
+
+int num(char string_name[80])
+{
+
+int i = 0 , space = 0;
+
+for(i = 0;string_name[i] != '\0';i ++)
+{
+	if(string_name[i] == ' ')
+	{
+		space ++;
+	}
+}
+return space + 1;
+}
+
+
+char a_A(char c)
+{
+if(c &gt;= 'a' &amp;&amp; c &lt;= 'z')
+{
+return (c-32);
+}
+else if(c&gt;='A'&amp;&amp;c&lt;='Z')
+{
+return c;
+}
+}
+
+char out(char str[80])
+{
+int length,i;
+length = strlen(str);
+if(length == 1)
+{
+printf(&quot;%c&quot;,a_A (str[0]));
+}
+else
+{
+	for(i=1;i&lt;length;i++)
+	{
+if(str[i-1]==' ')
+{
+printf(&quot;%c&quot;,a_A (str[i]));
+}
+else if(str[i-1] != ' ' &amp;&amp; i == 1)
+{
+printf(&quot;%c&quot;,a_A (str[i-1]));
+		}
+	}
+}
+return 0;
+}
+
+char out_array(int num,char array[10])
+{
+int i = 0;
+for(i = 0;i &lt; num;i ++)
+{
+	printf(&quot;%c&quot;,array[i]);
+}
+
+return 0;
+}
+
+int main ()
+{
+int number;
+char ch[10] = {0};
+char str[80] = {0};
+
+gets(str);
+number = num(str);
+ch[10] = out(str);
+out_array(number,str);
+
+return 0;
+}
+</code></pre>
+<p>大写英文字母<br>
+老规矩，尽量把程序用函数模块化<br>
+这个程序错了，有着相当大的问题，等学会指针了再来优化，先欠着</p>
+<pre><code>/*
+#include &lt;stdio.h&gt;
+#include&lt;string.h&gt;
+
+char AbC_AC(char tmp[80])
+{
+char str[80] = {0};
+int m, n = 0;
+
+for (m = 0; tmp[m] != '\0'; m++)
+{
+
+	if (tmp[m] &gt;= 'A' &amp;&amp; tmp[m] &lt;= 'Z')
+	{
+		str[n] = tmp[m];           
+		n ++;
+	}
+}
+return str[80];
+}
+
+char AAB_AB(char tmp[80],int length)
+{
+int i,j,k,x;
+char str[80] = {0};
+
+for (i = 0; i &lt; length; i ++)
+{         
+	for (j = 0; j &lt; i; j ++)
+	{
+		if (tmp[k] == tmp[i])
+		x = 1;
+	}
+	if(x == 1)
+	{
+		printf(&quot;%c&quot;, str[i]);
+	}
+}
+
+return str[80]; 
+}
+
+void out_ch(char ch[10],int num) 
+{
+int i = 0;
+for(i = 0;i &lt; num;i ++)
+{
+	printf(&quot;%c&quot;,ch[i]);
+}
+}
+
+int main() 
+{
+char str[80];
+char tmp1[80];
+char tmp2[80];
+int num1,num2;
+
+gets(str);
+tmp1[80] = AbC_AC(str);
+num1 = strlen(tmp1);
+tmp2[80] = AAB_AB(tmp1,num1);
+num2 = strlen(tmp2);
+out_ch(tmp2,num2);
+
+return 0;
+}
+*/
+
+#include &lt;stdio.h&gt;
+//这个程序不知道是水班哪位大佬写的，我就厚颜无耻一下，粘过来放这里了
+int main()
+{
+char a[80], b[80];
+
+gets(a);
+
+int i, j = 0;
+
+for (i = 0; a[i] != '\0'; i++)
+{
+	if (a[i] &gt;= 'A'&amp;&amp;a[i] &lt;= 'Z')
+{
+		b[j] = a[i];
+		j++;
+	}
+}
+if(j==0)
+printf(&quot;Not Found\n&quot;);
+
+for (i = 0; i &lt; j; i++) 
+{
+
+	int k, flag = 1;
+
+	for (k = 0; k &lt; i; k++) 
+{
+		if (b[k] == b[i])
+			flag = 0；
+	}
+	if (flag == 1)
+		printf(&quot;%c&quot;, b[i]); 
+}
+return 0;
+}
+</code></pre>
+<p>单词首字母大写<!-- more --><br>
+emmm很简单，不需要用函数模块化，直接来就好了</p>
+<pre><code>#include&lt;stdio.h&gt;
+#include&lt;string.h&gt;
+int main()
+{
+char ch[80];
+int i,num;
+while(gets(ch)!='\0')
+{
+num = strlen(ch);
+ch[0] -= 32;
+for(i = 0 ; i &lt; num ; i ++)
+	{
+if(ch[i] == ' ')
+ch[i + 1] -= 32;
+	}
+puts(ch);
+}
+
+return 0;
+} 
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Welcome to Place of Serenity]]></title>
         <id>https://Place-Serenity.github.io/hello-gridea/</id>
